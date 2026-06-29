@@ -1,0 +1,1013 @@
+<Window x:Class="VideoMixer.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:VideoMixer.ViewModels"
+        Title="FUCK CLIPFUSION" Height="820" Width="1200"
+        MinHeight="700" MinWidth="980"
+        WindowStyle="None" AllowsTransparency="True"
+        Background="Transparent"
+        ResizeMode="CanResizeWithGrip"
+        WindowStartupLocation="CenterScreen">
+
+    <Window.DataContext>
+        <vm:MainViewModel/>
+    </Window.DataContext>
+
+    <Border Background="{StaticResource BgBrush}" CornerRadius="12"
+            BorderThickness="1" BorderBrush="#404040">
+        <Border.Effect>
+            <DropShadowEffect Color="Black" Opacity="0.55" BlurRadius="32" ShadowDepth="6" Direction="270"/>
+        </Border.Effect>
+        <Border ClipToBounds="True" CornerRadius="12">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="44"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="50"/>
+                </Grid.RowDefinitions>
+
+                <!-- ════ TITLEBAR ════════════════════════════════════════════ -->
+                <Border Grid.Row="0" Background="{StaticResource SidebarBrush}"
+                        MouseDown="TitleBar_MouseDown">
+                    <Grid>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="16,0,0,0">
+                            <!-- Close -->
+                            <Button Width="12" Height="12" Margin="0,0,8,0" Click="Close_Click"
+                                    FocusVisualStyle="{x:Null}" Cursor="Hand">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Ellipse x:Name="e" Width="12" Height="12" Fill="#FF5F57"/>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="e" Property="Fill" Value="#C94444"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                            <!-- Minimize -->
+                            <Button Width="12" Height="12" Margin="0,0,8,0" Click="Minimize_Click"
+                                    FocusVisualStyle="{x:Null}" Cursor="Hand">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Ellipse x:Name="e" Width="12" Height="12" Fill="#FEBC2E"/>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="e" Property="Fill" Value="#C99520"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                            <!-- Maximize -->
+                            <Button Width="12" Height="12" Click="Maximize_Click"
+                                    FocusVisualStyle="{x:Null}" Cursor="Hand">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Ellipse x:Name="e" Width="12" Height="12" Fill="#28C840"/>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="e" Property="Fill" Value="#1A9E2E"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                        </StackPanel>
+                        <TextBlock Text="FUCK CLIPFUSION" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                   FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource Text2Brush}"/>
+                    </Grid>
+                </Border>
+
+                <!-- ════ CONTENT ═════════════════════════════════════════════ -->
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="210"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- ── SIDEBAR ─────────────────────────────────────────── -->
+                    <Border Grid.Column="0" Background="{StaticResource SidebarBrush}"
+                            BorderBrush="{StaticResource SepBrush}" BorderThickness="0,0,1,0">
+                        <DockPanel>
+                            <!-- App logo -->
+                            <StackPanel DockPanel.Dock="Top" Margin="18,20,18,20" Orientation="Horizontal">
+                                <Border Width="32" Height="32" CornerRadius="8" Margin="0,0,10,0">
+                                    <Border.Background>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                            <GradientStop Color="#0A84FF" Offset="0"/>
+                                            <GradientStop Color="#5E5CE6" Offset="1"/>
+                                        </LinearGradientBrush>
+                                    </Border.Background>
+                                    <TextBlock Text="▶" FontSize="14" HorizontalAlignment="Center"
+                                               VerticalAlignment="Center" Foreground="White"/>
+                                </Border>
+                                <StackPanel VerticalAlignment="Center">
+                                    <TextBlock Text="FUCK CLIPFUSION" FontSize="11" FontWeight="Bold"/>
+                                    <TextBlock Text="v2.0" FontSize="10" Foreground="{StaticResource Text3Brush}"/>
+                                </StackPanel>
+                            </StackPanel>
+
+                            <!-- Section label -->
+                            <TextBlock DockPanel.Dock="Top" Text="WORKFLOW"
+                                       Margin="20,0,0,6" Style="{StaticResource SectionHeader}"/>
+
+                            <!-- Nav buttons -->
+                            <Button x:Name="NavTemplates" DockPanel.Dock="Top"
+                                    Style="{StaticResource NavBtn}" Tag="active"
+                                    Click="Nav_Click" CommandParameter="Templates">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="✦" FontSize="13" Width="22"
+                                               Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
+                                    <TextBlock Text="Templates"
+                                               Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
+                                    <Border Background="{StaticResource AccentBrush}" CornerRadius="8"
+                                            Padding="6,1" Margin="8,0,0,0" VerticalAlignment="Center"
+                                            Visibility="{Binding Templates.Count, Converter={StaticResource CountToVis}}">
+                                        <TextBlock Text="{Binding Templates.Count}" FontSize="10"
+                                                   FontWeight="SemiBold" Foreground="White"/>
+                                    </Border>
+                                </StackPanel>
+                            </Button>
+
+                            <Button x:Name="NavVideos" DockPanel.Dock="Top"
+                                    Style="{StaticResource NavBtn}"
+                                    Click="Nav_Click" CommandParameter="Videos">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="🎬" FontSize="13" Width="22"
+                                               Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
+                                    <TextBlock Text="Vidéos"
+                                               Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
+                                    <Border Background="{StaticResource AccentBrush}" CornerRadius="8"
+                                            Padding="6,1" Margin="8,0,0,0" VerticalAlignment="Center"
+                                            Visibility="{Binding Videos.Count, Converter={StaticResource CountToVis}}">
+                                        <TextBlock Text="{Binding Videos.Count}" FontSize="10"
+                                                   FontWeight="SemiBold" Foreground="White"/>
+                                    </Border>
+                                </StackPanel>
+                            </Button>
+
+                            <Button x:Name="NavMusic" DockPanel.Dock="Top"
+                                    Style="{StaticResource NavBtn}"
+                                    Click="Nav_Click" CommandParameter="Music">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="🎵" FontSize="13" Width="22"
+                                               Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
+                                    <TextBlock Text="Musique"
+                                               Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
+                                    <Ellipse Width="8" Height="8" Margin="8,0,0,0" VerticalAlignment="Center"
+                                             Fill="{StaticResource GreenBrush}"
+                                             Visibility="{Binding HasMusic, Converter={StaticResource BoolToVis}}"/>
+                                </StackPanel>
+                            </Button>
+
+                            <Button x:Name="NavMix" DockPanel.Dock="Top"
+                                    Style="{StaticResource NavBtn}"
+                                    Click="Nav_Click" CommandParameter="Mix">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="🚀" FontSize="13" Width="22"
+                                               Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
+                                    <TextBlock Text="Mixer"
+                                               Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
+                                </StackPanel>
+                            </Button>
+
+                            <Rectangle DockPanel.Dock="Top" Height="1" Margin="18,12" Fill="{StaticResource SepBrush}"/>
+
+                            <Button x:Name="NavSettings" DockPanel.Dock="Top"
+                                    Style="{StaticResource NavBtn}"
+                                    Click="Nav_Click" CommandParameter="Settings">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="⚙" FontSize="13" Width="22"
+                                               Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
+                                    <TextBlock Text="Options"
+                                               Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
+                                </StackPanel>
+                            </Button>
+
+                            <Border/>
+                        </DockPanel>
+                    </Border>
+
+                    <!-- ── PAGES AREA ───────────────────────────────────────── -->
+                    <ScrollViewer x:Name="MainScrollViewer"
+                                  Grid.Column="1"
+                                  VerticalScrollBarVisibility="Auto"
+                                  HorizontalScrollBarVisibility="Disabled">
+                        <Grid x:Name="PagesRoot"
+                              Width="{Binding ViewportWidth, RelativeSource={RelativeSource AncestorType=ScrollViewer}}">
+
+                            <!-- ══ PAGE TEMPLATES ══════════════════════════ -->
+                            <StackPanel x:Name="PageTemplates" Margin="20,18">
+
+                                <!-- Header page -->
+                                <Grid Margin="0,0,0,14">
+                                    <TextBlock Text="Templates" Style="{StaticResource PageTitle}" VerticalAlignment="Center"/>
+                                    <TextBlock Text="Glisse pour positionner · Coin bleu pour agrandir"
+                                               Style="{StaticResource PageSubtitle}" HorizontalAlignment="Right"
+                                               VerticalAlignment="Center"/>
+                                </Grid>
+
+                                <!-- ═══ BULLE UNIQUE : Formulaire + Prévisualisation ═══ -->
+                                <Border Style="{StaticResource CardStyle}" Padding="0">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="1"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <!-- ── Formulaire ── -->
+                                        <StackPanel Grid.Column="0" Margin="16">
+                                            <TextBlock Text="NOUVEAU TEMPLATE" Style="{StaticResource SectionHeader}"/>
+
+                                            <!-- Texte -->
+                                            <TextBlock Text="Texte du caption" Style="{StaticResource LabelStyle}"/>
+                                            <TextBox Text="{Binding NewText, UpdateSourceTrigger=PropertyChanged}"
+                                                     AcceptsReturn="True" MinHeight="80" TextWrapping="Wrap"
+                                                     Margin="0,0,0,10"/>
+
+                                            <!-- Taille -->
+                                            <Grid Margin="0,0,0,10">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="36"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Grid.Column="0" Text="Taille" Style="{StaticResource LabelStyle}" VerticalAlignment="Center"/>
+                                                <TextBlock Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center"
+                                                           FontSize="12" FontWeight="SemiBold">
+                                                    <Run Text="{Binding NewSize, Mode=OneWay}"/>
+                                                    <Run Text="px" Foreground="{StaticResource Text3Brush}"/>
+                                                </TextBlock>
+                                            </Grid>
+                                            <Slider Value="{Binding NewSize}" Minimum="16" Maximum="120"
+                                                    IsSnapToTickEnabled="True" TickFrequency="1"
+                                                    Margin="0,0,0,12"/>
+
+                                            <!-- Style -->
+                                            <TextBlock Text="Style" Style="{StaticResource LabelStyle}"/>
+                                            <ComboBox ItemsSource="{Binding Styles}" SelectedItem="{Binding NewStyle}"
+                                                      Margin="0,0,0,10">
+                                                <ComboBox.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <TextBlock Text="{Binding Converter={StaticResource StyleFr}}"/>
+                                                    </DataTemplate>
+                                                </ComboBox.ItemTemplate>
+                                            </ComboBox>
+
+                                            <!-- Couleur -->
+                                            <TextBlock Text="Couleur" Style="{StaticResource LabelStyle}"/>
+                                            <Grid Margin="0,0,0,14">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="32"/>
+                                                    <ColumnDefinition Width="6"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Border Grid.Column="0" CornerRadius="6" Height="32"
+                                                        Background="{Binding NewColor, Converter={StaticResource HexToBrush}}"
+                                                        BorderBrush="{StaticResource SepBrush}" BorderThickness="1"/>
+                                                <TextBox Grid.Column="2"
+                                                         Text="{Binding NewColor, UpdateSourceTrigger=PropertyChanged}"/>
+                                            </Grid>
+
+                                            <!-- Boutons -->
+                                            <StackPanel Orientation="Horizontal">
+                                                <Button Command="{Binding CancelEditCmd}"
+                                                        Style="{StaticResource BtnSecondary}"
+                                                        Margin="0,0,6,0"
+                                                        Visibility="{Binding IsEditing, Converter={StaticResource BoolToVis}}">
+                                                    <TextBlock Text="Annuler"/>
+                                                </Button>
+                                                <Button Command="{Binding AddTemplateCmd}" Style="{StaticResource BtnPrimary}">
+                                                    <TextBlock>
+                                                        <TextBlock.Style>
+                                                            <Style TargetType="TextBlock">
+                                                                <Setter Property="Text" Value="+ Ajouter"/>
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding IsEditing}" Value="True">
+                                                                        <Setter Property="Text" Value="✓ Enregistrer"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBlock.Style>
+                                                    </TextBlock>
+                                                </Button>
+                                            </StackPanel>
+                                        </StackPanel>
+
+                                        <!-- Séparateur vertical -->
+                                        <Rectangle Grid.Column="1" Fill="{StaticResource SepBrush}"/>
+
+                                        <!-- ── Prévisualisation ── -->
+                                        <Grid Grid.Column="2">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="*"/>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
+
+                                            <!-- Header preview -->
+                                            <Border Grid.Row="0" Background="{StaticResource Surface2Brush}"
+                                                    Padding="12,8" CornerRadius="0">
+                                                <TextBlock Text="PRÉVISUALISATION" Style="{StaticResource SectionHeader}"
+                                                           Margin="0" VerticalAlignment="Center"/>
+                                            </Border>
+
+                                            <!-- Canvas -->
+                                            <Border Grid.Row="1" Background="#111" Margin="10,8,10,0"
+                                                    CornerRadius="6" ClipToBounds="True" MinHeight="200">
+                                                <Grid>
+                                                    <!-- Image composite SkiaSharp : frame + texte identique au rendu final -->
+                                                    <Image Source="{Binding PreviewOverlayPath}"
+                                                           Stretch="Uniform" IsHitTestVisible="False"/>
+
+                                                    <!-- Placeholder quand pas encore de preview -->
+                                                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center"
+                                                                Visibility="{Binding HasPreview, Converter={StaticResource InvBoolToVis}}">
+                                                        <TextBlock Text="▶" FontSize="28" HorizontalAlignment="Center"
+                                                                   Foreground="{StaticResource Text3Brush}"/>
+                                                        <TextBlock Text="Scanne des vidéos" FontSize="11"
+                                                                   HorizontalAlignment="Center" Margin="0,4,0,1"
+                                                                   Foreground="{StaticResource Text3Brush}"/>
+                                                        <TextBlock Text="pour voir la préview" FontSize="11"
+                                                                   HorizontalAlignment="Center"
+                                                                   Foreground="{StaticResource Text3Brush}"/>
+                                                    </StackPanel>
+                                                    <Canvas x:Name="PreviewCanvas"
+                                                            SizeChanged="PreviewCanvas_SizeChanged"
+                                                            MouseLeftButtonDown="Preview_MouseDown"
+                                                            MouseMove="Preview_MouseMove"
+                                                            MouseLeftButtonUp="Preview_MouseUp"
+                                                            MouseLeave="Preview_MouseLeave"
+                                                            Background="Transparent">
+                                                        <Border x:Name="PreviewTextContainer"
+                                                                Canvas.Left="0" Canvas.Top="0"
+                                                                Cursor="SizeAll" Background="Transparent"
+                                                                BorderBrush="{StaticResource AccentBrush}"
+                                                                BorderThickness="1" MinWidth="20" MinHeight="16">
+                                                            <Grid>
+                                                                <TextBlock x:Name="PreviewText"
+                                                                           Text="{Binding NewText}"
+                                                                           FontFamily="Bahnschrift, Segoe UI"
+                                                                           FontSize="{Binding PreviewFontSize}"
+                                                                           FontWeight="Bold" Foreground="Transparent"
+                                                                           TextWrapping="Wrap" MaxWidth="220"/>
+                                                                <Border x:Name="ResizeHandle"
+                                                                        Width="10" Height="10"
+                                                                        Background="{StaticResource AccentBrush}"
+                                                                        CornerRadius="2"
+                                                                        HorizontalAlignment="Right"
+                                                                        VerticalAlignment="Bottom"
+                                                                        Margin="0,1,-4,-4"
+                                                                        Cursor="SizeNWSE"
+                                                                        MouseLeftButtonDown="Resize_MouseDown"/>
+                                                            </Grid>
+                                                        </Border>
+                                                    </Canvas>
+                                                </Grid>
+                                            </Border>
+
+                                            <TextBlock Grid.Row="2" Margin="12,4,12,8"
+                                                       FontSize="10" Foreground="{StaticResource Text3Brush}"
+                                                       Text="Glisse le cadre bleu · Coin bleu = agrandir"/>
+                                        </Grid>
+                                    </Grid>
+                                </Border>
+
+                                <!-- ═══ BIBLIOTHÈQUE ═══ -->
+                                <Border Style="{StaticResource CardStyle}">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid Grid.Row="0" Margin="0,0,0,10">
+                                            <TextBlock Text="BIBLIOTHÈQUE" Style="{StaticResource SectionHeader}" Margin="0" VerticalAlignment="Center"/>
+                                            <Border HorizontalAlignment="Right" Background="{StaticResource Surface2Brush}"
+                                                    CornerRadius="4" Padding="6,2">
+                                                <TextBlock FontSize="11" Foreground="{StaticResource Text2Brush}">
+                                                    <Run Text="{Binding Templates.Count, Mode=OneWay}"/>
+                                                    <Run Text=" template(s)"/>
+                                                </TextBlock>
+                                            </Border>
+                                        </Grid>
+                                        <StackPanel Grid.Row="1" HorizontalAlignment="Center" Margin="0,12,0,4"
+                                                    Visibility="{Binding Templates.Count, Converter={StaticResource InvBoolToVis}}">
+                                            <TextBlock Text="Aucun template — crée-en un ci-dessus."
+                                                       Foreground="{StaticResource Text3Brush}" FontSize="12"
+                                                       HorizontalAlignment="Center"/>
+                                        </StackPanel>
+                                        <ItemsControl Grid.Row="1" ItemsSource="{Binding Templates}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Border Background="{StaticResource Surface2Brush}"
+                                                            CornerRadius="6" Margin="0,0,0,4" Padding="10,8">
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="30"/>
+                                                                <ColumnDefinition Width="*"/>
+                                                                <ColumnDefinition Width="Auto"/>
+                                                            </Grid.ColumnDefinitions>
+                                                            <Border Grid.Column="0" Width="26" Height="26" CornerRadius="4"
+                                                                    Background="{Binding Color, Converter={StaticResource HexToBrush}}"
+                                                                    BorderBrush="{StaticResource SepBrush}" BorderThickness="1">
+                                                                <TextBlock Text="A" FontSize="12" FontWeight="Bold"
+                                                                           HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                                           Foreground="White" Opacity="0.85"/>
+                                                            </Border>
+                                                            <StackPanel Grid.Column="1" Margin="8,0,0,0" VerticalAlignment="Center">
+                                                                <TextBlock Text="{Binding Preview}" FontSize="13"
+                                                                           TextTrimming="CharacterEllipsis"/>
+                                                                <StackPanel Orientation="Horizontal" Margin="0,1,0,0">
+                                                                    <TextBlock Text="{Binding FontSize}" FontSize="11"
+                                                                               Foreground="{StaticResource Text3Brush}"/>
+                                                                    <TextBlock Text="px · " FontSize="11"
+                                                                               Foreground="{StaticResource Text3Brush}"/>
+                                                                    <TextBlock Text="{Binding Style, Converter={StaticResource StyleFr}}"
+                                                                               FontSize="11" Foreground="{StaticResource Text3Brush}"/>
+                                                                </StackPanel>
+                                                            </StackPanel>
+                                                            <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                                                                <Button Content="Éditer" Style="{StaticResource BtnSecondary}"
+                                                                        FontSize="11" Padding="8,0" Height="26" Margin="0,0,4,0"
+                                                                        Command="{Binding DataContext.EditTemplateCmd, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                                        CommandParameter="{Binding}"/>
+                                                                <Button Content="✕" Style="{StaticResource BtnDanger}"
+                                                                        Height="26" Padding="8,0"
+                                                                        Command="{Binding DataContext.DeleteTemplateCmd, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                                        CommandParameter="{Binding}"/>
+                                                            </StackPanel>
+                                                        </Grid>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </Grid>
+                                </Border>
+                            </StackPanel><!-- fin PageTemplates -->
+
+                            <!-- ══ PAGE VIDEOS ══════════════════════════════ -->
+                            <StackPanel x:Name="PageVideos" Margin="28,24" Visibility="Collapsed">
+                                <TextBlock Text="Vidéos" Style="{StaticResource PageTitle}"/>
+                                <TextBlock Text="Sélectionne le dossier contenant tes vidéos sources."
+                                           Style="{StaticResource PageSubtitle}" Margin="0,4,0,20"/>
+
+                                <!-- Folder picker -->
+                                <Border Style="{StaticResource CardStyle}">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Grid.Row="0" Text="DOSSIER SOURCE"
+                                                   Style="{StaticResource SectionHeader}"/>
+                                        <Grid Grid.Row="1" Margin="0,0,0,10">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="10"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBox Grid.Column="0"
+                                                     Text="{Binding VideoFolder, UpdateSourceTrigger=PropertyChanged}"
+                                                     IsReadOnly="True"/>
+                                            <Button Grid.Column="2" Content="Parcourir"
+                                                    Style="{StaticResource BtnSecondary}"
+                                                    Command="{Binding PickVideoFolderCmd}"/>
+                                        </Grid>
+                                        <Button Grid.Row="2" Content="🔍  Scanner les vidéos"
+                                                Style="{StaticResource BtnPrimary}"
+                                                Command="{Binding ScanVideosCmd}"
+                                                HorizontalAlignment="Left"/>
+                                    </Grid>
+                                </Border>
+
+                                <!-- Video grid -->
+                                <Border Style="{StaticResource CardStyle}">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid Grid.Row="0" Margin="0,0,0,12">
+                                            <TextBlock Text="VIDÉOS DÉTECTÉES" Style="{StaticResource SectionHeader}"
+                                                       VerticalAlignment="Center"/>
+                                            <Border HorizontalAlignment="Right" Background="{StaticResource Surface2Brush}"
+                                                    CornerRadius="8" Padding="8,2">
+                                                <TextBlock Foreground="{StaticResource Text2Brush}" FontSize="12">
+                                                    <Run Text="{Binding Videos.Count, Mode=OneWay}"/>
+                                                    <Run Text=" fichier(s)"/>
+                                                </TextBlock>
+                                            </Border>
+                                        </Grid>
+
+                                        <!-- Empty -->
+                                        <StackPanel Grid.Row="1" HorizontalAlignment="Center" Margin="0,16,0,8"
+                                                    Visibility="{Binding Videos.Count, Converter={StaticResource InvBoolToVis}}">
+                                            <TextBlock Text="🎬" FontSize="28" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="Aucune vidéo. Sélectionne un dossier et scanne."
+                                                       Foreground="{StaticResource Text3Brush}"
+                                                       FontSize="13" HorizontalAlignment="Center" Margin="0,6,0,0"/>
+                                        </StackPanel>
+
+                                        <!-- Video cards -->
+                                        <ItemsControl Grid.Row="1" ItemsSource="{Binding Videos}">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <WrapPanel/>
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Border Background="{StaticResource Surface2Brush}"
+                                                            CornerRadius="8" Width="148" Margin="0,0,8,8" Padding="10,8">
+                                                        <StackPanel>
+                                                            <Border Background="{StaticResource BgBrush}"
+                                                                    CornerRadius="6" Height="72" Margin="0,0,0,6">
+                                                                <TextBlock Text="▶" FontSize="20"
+                                                                           HorizontalAlignment="Center"
+                                                                           VerticalAlignment="Center"
+                                                                           Foreground="{StaticResource Text3Brush}"/>
+                                                            </Border>
+                                                            <TextBlock Text="{Binding Converter={StaticResource PathToFilename}}"
+                                                                       FontSize="10"
+                                                                       Foreground="{StaticResource Text2Brush}"
+                                                                       TextTrimming="CharacterEllipsis"
+                                                                       ToolTip="{Binding}"/>
+                                                        </StackPanel>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </Grid>
+                                </Border>
+                            </StackPanel>
+
+                            <!-- ══ PAGE MUSIC ═══════════════════════════════ -->
+                            <StackPanel x:Name="PageMusic" Margin="28,24" Visibility="Collapsed">
+                                <TextBlock Text="Musique" Style="{StaticResource PageTitle}"/>
+                                <TextBlock Text="Ajoute une musique de fond optionnelle à tes vidéos."
+                                           Style="{StaticResource PageSubtitle}" Margin="0,4,0,20"/>
+
+                                <!-- Drop zone -->
+                                <Border Style="{StaticResource CardStyle}"
+                                        Visibility="{Binding HasMusic, Converter={StaticResource InvBoolToVis}}">
+                                    <Button Command="{Binding PickMusicCmd}" Cursor="Hand"
+                                            FocusVisualStyle="{x:Null}" HorizontalAlignment="Stretch"
+                                            BorderThickness="0">
+                                        <Button.Template>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border x:Name="dz" CornerRadius="10" Padding="40,36"
+                                                        Background="Transparent"
+                                                        BorderBrush="{StaticResource SepBrush}"
+                                                        BorderThickness="1.5">
+                                                    <StackPanel HorizontalAlignment="Center">
+                                                        <TextBlock Text="🎵" FontSize="36"
+                                                                   HorizontalAlignment="Center"/>
+                                                        <TextBlock Text="Clique pour choisir un fichier audio"
+                                                                   FontSize="14" FontWeight="SemiBold"
+                                                                   HorizontalAlignment="Center"
+                                                                   Margin="0,12,0,4"/>
+                                                        <TextBlock Text="MP3, WAV, M4A, AAC"
+                                                                   FontSize="12"
+                                                                   Foreground="{StaticResource Text3Brush}"
+                                                                   HorizontalAlignment="Center"/>
+                                                    </StackPanel>
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter TargetName="dz" Property="Background"
+                                                                Value="{StaticResource Surface2Brush}"/>
+                                                        <Setter TargetName="dz" Property="BorderBrush"
+                                                                Value="{StaticResource AccentBrush}"/>
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                    </Button>
+                                </Border>
+
+                                <!-- Music loaded -->
+                                <Border Style="{StaticResource CardStyle}"
+                                        Visibility="{Binding HasMusic, Converter={StaticResource BoolToVis}}">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="1"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+
+                                        <!-- Header row -->
+                                        <Grid Grid.Row="0" Margin="0,0,0,14">
+                                            <StackPanel Orientation="Horizontal">
+                                                <Border Width="40" Height="40" CornerRadius="20"
+                                                        Background="{StaticResource AccentBrush}" Margin="0,0,12,0">
+                                                    <TextBlock Text="♪" FontSize="18" HorizontalAlignment="Center"
+                                                               VerticalAlignment="Center" Foreground="White"/>
+                                                </Border>
+                                                <StackPanel VerticalAlignment="Center">
+                                                    <TextBlock Text="{Binding MusicName}" FontSize="14"
+                                                               FontWeight="SemiBold" TextTrimming="CharacterEllipsis"
+                                                               MaxWidth="380"/>
+                                                    <TextBlock Text="{Binding MusicPath}" FontSize="11"
+                                                               Foreground="{StaticResource Text3Brush}"
+                                                               TextTrimming="CharacterEllipsis" MaxWidth="380"/>
+                                                </StackPanel>
+                                            </StackPanel>
+                                            <Button Content="Retirer" Style="{StaticResource BtnDanger}"
+                                                    Command="{Binding RemoveMusicCmd}"
+                                                    HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                                        </Grid>
+
+                                        <Rectangle Grid.Row="1" Fill="{StaticResource SepBrush}" Margin="0,0,0,14"/>
+
+                                        <!-- Music volume -->
+                                        <TextBlock Grid.Row="2" Text="VOLUME MUSIQUE"
+                                                   Style="{StaticResource SectionHeader}"/>
+                                        <Grid Grid.Row="3" Margin="0,0,0,16">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="50"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Slider Grid.Column="0" Minimum="0" Maximum="100"
+                                                    Value="{Binding MusicVolume}" VerticalAlignment="Center"/>
+                                            <TextBlock Grid.Column="1"
+                                                       Text="{Binding MusicVolume, Converter={StaticResource DblToPct}}"
+                                                       VerticalAlignment="Center" HorizontalAlignment="Right"
+                                                       FontSize="12" Foreground="{StaticResource Text2Brush}"/>
+                                        </Grid>
+
+                                        <!-- Original volume -->
+                                        <TextBlock Grid.Row="4" Text="VOLUME VIDÉO ORIGINALE"
+                                                   Style="{StaticResource SectionHeader}"/>
+                                        <Grid Grid.Row="5">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="50"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Slider Grid.Column="0" Minimum="0" Maximum="100"
+                                                    Value="{Binding OrigVolume}" VerticalAlignment="Center"/>
+                                            <TextBlock Grid.Column="1"
+                                                       Text="{Binding OrigVolume, Converter={StaticResource DblToPct}}"
+                                                       VerticalAlignment="Center" HorizontalAlignment="Right"
+                                                       FontSize="12" Foreground="{StaticResource Text2Brush}"/>
+                                        </Grid>
+                                    </Grid>
+                                </Border>
+                            </StackPanel>
+
+                            <!-- ══ PAGE MIX ══════════════════════════════════ -->
+                            <StackPanel x:Name="PageMix" Margin="28,24" Visibility="Collapsed">
+                                <TextBlock Text="Mixer" Style="{StaticResource PageTitle}"/>
+                                <TextBlock Text="Configure et lance la génération de tes vidéos."
+                                           Style="{StaticResource PageSubtitle}" Margin="0,4,0,20"/>
+
+                                <!-- Summary + Params side by side -->
+                                <Grid Margin="0,0,0,12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="12"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- Summary -->
+                                    <Border Grid.Column="0" Style="{StaticResource CardStyle}" Margin="0">
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="1"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="1"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="1"/>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
+                                            <TextBlock Grid.Row="0" Text="RÉSUMÉ"
+                                                       Style="{StaticResource SectionHeader}"/>
+                                            <Grid Grid.Row="1" Margin="0,0,0,10">
+                                                <TextBlock Text="Templates" Foreground="{StaticResource Text2Brush}" FontSize="12"/>
+                                                <TextBlock Text="{Binding Templates.Count}" HorizontalAlignment="Right"
+                                                           FontSize="15" FontWeight="SemiBold"/>
+                                            </Grid>
+                                            <Rectangle Grid.Row="2" Fill="{StaticResource SepBrush}" Margin="0,0,0,10"/>
+                                            <Grid Grid.Row="3" Margin="0,0,0,10">
+                                                <TextBlock Text="Vidéos" Foreground="{StaticResource Text2Brush}" FontSize="12"/>
+                                                <TextBlock Text="{Binding Videos.Count}" HorizontalAlignment="Right"
+                                                           FontSize="15" FontWeight="SemiBold"/>
+                                            </Grid>
+                                            <Rectangle Grid.Row="4" Fill="{StaticResource SepBrush}" Margin="0,0,0,10"/>
+                                            <Grid Grid.Row="5" Margin="0,0,0,10">
+                                                <TextBlock Text="Musique" Foreground="{StaticResource Text2Brush}" FontSize="12"/>
+                                                <TextBlock HorizontalAlignment="Right" FontSize="13" FontWeight="SemiBold">
+                                                    <TextBlock.Style>
+                                                        <Style TargetType="TextBlock">
+                                                            <Setter Property="Text" Value="Non"/>
+                                                            <Setter Property="Foreground" Value="{StaticResource Text3Brush}"/>
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding HasMusic}" Value="True">
+                                                                    <Setter Property="Text" Value="Oui ✓"/>
+                                                                    <Setter Property="Foreground" Value="{StaticResource GreenBrush}"/>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </TextBlock.Style>
+                                                </TextBlock>
+                                            </Grid>
+                                            <Rectangle Grid.Row="6" Fill="{StaticResource SepBrush}" Margin="0,0,0,10"/>
+                                            <Grid Grid.Row="7">
+                                                <TextBlock Text="Combos max" Foreground="{StaticResource Text2Brush}" FontSize="12"/>
+                                                <TextBlock Text="{Binding MaxCombos}" HorizontalAlignment="Right"
+                                                           FontSize="15" FontWeight="SemiBold"
+                                                           Foreground="{StaticResource AccentBrush}"/>
+                                            </Grid>
+                                        </Grid>
+                                    </Border>
+
+                                    <!-- Params -->
+                                    <Border Grid.Column="2" Style="{StaticResource CardStyle}" Margin="0">
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
+                                            <TextBlock Grid.Row="0" Text="PARAMÈTRES"
+                                                       Style="{StaticResource SectionHeader}"/>
+                                            <TextBlock Grid.Row="1" Text="Nombre de vidéos"
+                                                       Style="{StaticResource LabelStyle}"/>
+                                            <TextBox Grid.Row="2" Margin="0,0,0,12"
+                                                     Text="{Binding MixCount, UpdateSourceTrigger=PropertyChanged}"/>
+                                            <TextBlock Grid.Row="3" Text="Dossier de sortie"
+                                                       Style="{StaticResource LabelStyle}"/>
+                                            <Grid Grid.Row="4" Margin="0,0,0,12">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="8"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBox Grid.Column="0"
+                                                         Text="{Binding OutFolder, UpdateSourceTrigger=PropertyChanged}"
+                                                         IsReadOnly="True"/>
+                                                <Button Grid.Column="2" Content="…" Width="34"
+                                                        Style="{StaticResource BtnSecondary}"
+                                                        Command="{Binding PickOutFolderCmd}"
+                                                        Padding="0"/>
+                                            </Grid>
+                                            <TextBlock Grid.Row="5" Text="Préfixe fichier"
+                                                       Style="{StaticResource LabelStyle}"/>
+                                            <TextBox Grid.Row="6"
+                                                     Text="{Binding OutPrefix, UpdateSourceTrigger=PropertyChanged}"/>
+                                        </Grid>
+                                    </Border>
+                                </Grid>
+
+                                <!-- Progress card — reste visible après la fin pour voir les erreurs -->
+                                <Border Style="{StaticResource CardStyle}"
+                                        Visibility="{Binding ShowResults, Converter={StaticResource BoolToVis}}">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Grid.Row="0" Text="PROGRESSION / RÉSULTATS"
+                                                   Style="{StaticResource SectionHeader}"/>
+
+                                        <!-- Progress bar -->
+                                        <Grid Grid.Row="1" Margin="0,0,0,12">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="6"/>
+                                            </Grid.RowDefinitions>
+                                            <Grid Grid.Row="0" Margin="0,0,0,6">
+                                                <TextBlock Foreground="{StaticResource Text2Brush}" FontSize="12">
+                                                    <Run Text="{Binding DoneJobs, Mode=OneWay}"/>
+                                                    <Run Text=" / "/>
+                                                    <Run Text="{Binding MixCount, Mode=OneWay}"/>
+                                                    <Run Text=" vidéos"/>
+                                                </TextBlock>
+                                                <TextBlock HorizontalAlignment="Right" FontSize="12"
+                                                           FontWeight="SemiBold"
+                                                           Foreground="{StaticResource AccentBrush}"
+                                                           Text="{Binding Progress, Converter={StaticResource DblToPct}}"/>
+                                            </Grid>
+                                            <ProgressBar Grid.Row="1" Value="{Binding Progress}" Maximum="100"/>
+                                        </Grid>
+
+                                        <!-- Job list -->
+                                        <Border Grid.Row="2" Background="{StaticResource BgBrush}"
+                                                CornerRadius="8" Margin="0,0,0,10">
+                                            <ScrollViewer x:Name="JobScrollViewer" MaxHeight="160"
+                                                          VerticalScrollBarVisibility="Auto" Padding="10,8">
+                                                <ItemsControl ItemsSource="{Binding Jobs}">
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Grid Margin="0,2">
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="22"/>
+                                                                    <ColumnDefinition Width="*"/>
+                                                                    <ColumnDefinition Width="Auto"/>
+                                                                </Grid.ColumnDefinitions>
+                                                                <TextBlock Grid.Column="0" Text="{Binding StatusIcon}"
+                                                                           FontSize="11" VerticalAlignment="Center"/>
+                                                                <TextBlock Grid.Column="1" Text="{Binding OutputName}"
+                                                                           FontSize="12" VerticalAlignment="Center"
+                                                                           Foreground="{Binding StatusColor, Converter={StaticResource StrToBrush}}"/>
+                                                                <TextBlock Grid.Column="2" Text="{Binding VideoName}"
+                                                                           FontSize="11" VerticalAlignment="Center"
+                                                                           Foreground="{StaticResource Text3Brush}"
+                                                                           Margin="8,0,0,0"/>
+                                                            </Grid>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                            </ScrollViewer>
+                                        </Border>
+
+                                        <!-- Console -->
+                                        <Border Grid.Row="3" Background="#0D0D0D" CornerRadius="8">
+                                            <ScrollViewer x:Name="LogScrollViewer" MaxHeight="130"
+                                                          VerticalScrollBarVisibility="Auto" Padding="10,8">
+                                                <TextBlock x:Name="LogBlock"
+                                                           Text="{Binding LogText}"
+                                                           FontFamily="Consolas, Courier New"
+                                                           FontSize="11" Foreground="#30D158"
+                                                           TextWrapping="Wrap"/>
+                                            </ScrollViewer>
+                                        </Border>
+                                    </Grid>
+                                </Border>
+
+                                <!-- Launch button -->
+                                <Button Content="🎬  Lancer le mix"
+                                        Style="{StaticResource BtnGo}"
+                                        Command="{Binding StartMixCmd}"
+                                        HorizontalAlignment="Center"
+                                        Margin="0,10,0,0"/>
+                            </StackPanel>
+
+                            <!-- ══ PAGE SETTINGS ════════════════════════════ -->
+                            <StackPanel x:Name="PageSettings" Margin="28,24" Visibility="Collapsed">
+                                <TextBlock Text="Options" Style="{StaticResource PageTitle}"/>
+                                <TextBlock Text="Configuration de FFmpeg et qualité de rendu."
+                                           Style="{StaticResource PageSubtitle}" Margin="0,4,0,20"/>
+
+                                <!-- FFmpeg -->
+                                <Border Style="{StaticResource CardStyle}">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Grid.Row="0" Text="FFMPEG" Style="{StaticResource SectionHeader}"/>
+                                        <TextBlock Grid.Row="1" Text="Chemin vers ffmpeg"
+                                                   Style="{StaticResource LabelStyle}"/>
+                                        <Grid Grid.Row="2">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="10"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBox Grid.Column="0"
+                                                     Text="{Binding FFmpegPath, UpdateSourceTrigger=PropertyChanged}"/>
+                                            <Button Grid.Column="2" Content="Parcourir"
+                                                    Style="{StaticResource BtnSecondary}"
+                                                    Click="BrowseFFmpeg_Click"/>
+                                        </Grid>
+                                        <TextBlock Grid.Row="3" Margin="0,8,0,0" FontSize="11"
+                                                   Foreground="{StaticResource Text3Brush}"
+                                                   Text="Laisse «ffmpeg» si FFmpeg est dans le PATH système."/>
+                                    </Grid>
+                                </Border>
+
+                                <!-- Speed -->
+                                <Border Style="{StaticResource CardStyle}">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Grid.Row="0" Text="VITESSE" Style="{StaticResource SectionHeader}"/>
+
+                                        <!-- Jobs slider -->
+                                        <Grid Grid.Row="1" Margin="0,0,0,6">
+                                            <TextBlock Text="Jobs simultanés" Style="{StaticResource LabelStyle}"
+                                                       VerticalAlignment="Center"/>
+                                            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal"
+                                                        VerticalAlignment="Center">
+                                                <TextBlock Text="{Binding ParallelJobs, Mode=OneWay}"
+                                                           FontSize="15" FontWeight="Bold"
+                                                           Foreground="{StaticResource AccentBrush}"/>
+                                                <TextBlock FontSize="12" Foreground="{StaticResource Text3Brush}"
+                                                           VerticalAlignment="Bottom" Margin="4,0,0,1">
+                                                    <Run Text=" / "/>
+                                                    <Run Text="{Binding CPUCores, Mode=OneWay}"/>
+                                                    <Run Text=" cœurs"/>
+                                                </TextBlock>
+                                            </StackPanel>
+                                        </Grid>
+                                        <Slider Grid.Row="2" Value="{Binding ParallelJobs}" Minimum="1"
+                                                Maximum="{Binding CPUCores}"
+                                                IsSnapToTickEnabled="True" TickFrequency="1"
+                                                Margin="0,0,0,14"/>
+
+                                        <!-- GPU -->
+                                        <Grid Grid.Row="3" Margin="0,0,0,6">
+                                            <TextBlock VerticalAlignment="Center">
+                                                <Run Text="Accélération GPU" FontSize="13"/>
+                                                <Run Text="  (NVENC — NVIDIA)" FontSize="11"
+                                                     Foreground="{StaticResource Text3Brush}"/>
+                                            </TextBlock>
+                                            <CheckBox HorizontalAlignment="Right" VerticalAlignment="Center"
+                                                      IsChecked="{Binding UseHWAccel}"
+                                                      Foreground="{StaticResource TextBrush}"/>
+                                        </Grid>
+
+                                        <TextBlock Grid.Row="4" FontSize="11" Foreground="{StaticResource Text3Brush}"
+                                                   TextWrapping="Wrap"
+                                                   Text="⚡ Augmente les jobs simultanés pour plus de vitesse. Active le GPU si tu as une carte NVIDIA récente."/>
+                                    </Grid>
+                                </Border>
+
+                                <!-- Quality -->
+                                <Border Style="{StaticResource CardStyle}">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Grid.Row="0" Text="QUALITÉ" Style="{StaticResource SectionHeader}"/>
+                                        <TextBlock Grid.Row="1" Text="Codec vidéo" Style="{StaticResource LabelStyle}"/>
+                                        <ComboBox Grid.Row="2" Margin="0,0,0,14"
+                                                  ItemsSource="{Binding CodecOptions}"
+                                                  SelectedItem="{Binding Codec}"/>
+                                        <Grid Grid.Row="3" Margin="0,0,0,4">
+                                            <TextBlock Text="CRF (qualité)" Style="{StaticResource LabelStyle}"
+                                                       VerticalAlignment="Center"/>
+                                            <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center"
+                                                       FontSize="12" Foreground="{StaticResource AccentBrush}">
+                                                <Run Text="{Binding CRF, Mode=OneWay}"/>
+                                                <Run Text=" (18=max · 28=min)"/>
+                                            </TextBlock>
+                                        </Grid>
+                                        <Slider Grid.Row="4" Value="{Binding CRF}" Minimum="18" Maximum="28"
+                                                IsSnapToTickEnabled="True" TickFrequency="1"
+                                                Margin="0,0,0,14"/>
+                                        <TextBlock Grid.Row="5" Text="Threads CPU par job (0 = auto)"
+                                                   Style="{StaticResource LabelStyle}"/>
+                                        <TextBox Grid.Row="6"
+                                                 Text="{Binding Threads, UpdateSourceTrigger=PropertyChanged}"/>
+                                    </Grid>
+                                </Border>
+                            </StackPanel>
+
+                        </Grid>
+                    </ScrollViewer>
+                </Grid>
+
+                <!-- ════ STATUS BAR ═══════════════════════════════════════════ -->
+                <Border Grid.Row="2" Background="{StaticResource SidebarBrush}"
+                        BorderBrush="{StaticResource SepBrush}" BorderThickness="0,1,0,0">
+                    <Grid Margin="24,0">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock Foreground="{StaticResource Text3Brush}" FontSize="12">
+                                <Run FontSize="15" FontWeight="Bold" Foreground="{StaticResource TextBrush}"
+                                     Text="{Binding Templates.Count, Mode=OneWay}"/>
+                                <Run Text=" templates  ×  "/>
+                                <Run FontSize="15" FontWeight="Bold" Foreground="{StaticResource TextBrush}"
+                                     Text="{Binding Videos.Count, Mode=OneWay}"/>
+                                <Run Text=" vidéos  =  "/>
+                                <Run FontSize="15" FontWeight="Bold" Foreground="{StaticResource AccentBrush}"
+                                     Text="{Binding MaxCombos, Mode=OneWay}"/>
+                                <Run Text=" combinaisons"/>
+                            </TextBlock>
+                        </StackPanel>
+                        <Button Content="🚀  GO" HorizontalAlignment="Right" VerticalAlignment="Center"
+                                Style="{StaticResource BtnPrimary}" Padding="16,7"
+                                Click="QuickGo_Click"/>
+                    </Grid>
+                </Border>
+
+            </Grid>
+        </Border>
+    </Border>
+</Window>
